@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelopak — Toko Bunga Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2F4A3E;
+    --forest-dark:#1B2C24;
+    --ivory:#FAF6EF;
+    --paper:#F3EEE3;
+    --blush:#E8B4BB;
+    --rose:#A9596A;
+    --rose-dark:#7C3F4C;
+    --gold:#C9A24B;
+    --ink:#2A2822;
+    --ink-soft:#6E6A5F;
+    --line:#DDD5C4;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost', sans-serif;
+    background:var(--ivory);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Cormorant Garamond', serif; font-weight:600; color:var(--forest-dark); }
+  a{ color:inherit; }
+  img,svg{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+  :focus-visible{ outline:2px solid var(--rose); outline-offset:2px; }
+  .container{ max-width:1140px; margin:0 auto; padding:0 28px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--rose-dark); font-weight:500; }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,246,239,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:18px 0; }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo .display{ font-size:26px; letter-spacing:.02em; }
+  .nav-links{ display:flex; gap:32px; list-style:none; font-size:15px; }
+  .nav-links a{ position:relative; padding-bottom:4px; }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; width:0; height:1px;
+    background:var(--rose); transition:width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .cart-btn{
+    display:flex; align-items:center; gap:8px; padding:10px 18px;
+    border:1px solid var(--forest-dark); border-radius:100px;
+    font-size:14px; position:relative; transition:background .2s ease;
+  }
+  .cart-btn:hover{ background:var(--forest-dark); color:var(--ivory); }
+  .cart-count{
+    background:var(--rose); color:#fff; font-size:11px; font-weight:600;
+    min-width:18px; height:18px; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; padding:0 4px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:90px 0 70px;
+    background:linear-gradient(180deg, var(--paper) 0%, var(--ivory) 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
+  .hero h1{ font-size:56px; line-height:1.08; margin:14px 0 22px; }
+  .hero h1 em{ font-style:italic; color:var(--rose-dark); }
+  .hero p{ font-size:17px; color:var(--ink-soft); max-width:440px; margin-bottom:32px; }
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--forest-dark); color:var(--ivory);
+    padding:15px 30px; border-radius:100px; font-size:15px; letter-spacing:.02em;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .btn-primary:hover{ background:var(--rose-dark); transform:translateY(-2px); }
+  .hero-art{ position:relative; }
+  .hero-art svg{ width:100%; height:auto; }
+
+  /* ---------- Kategori ---------- */
+  .kategori-bar{
+    display:flex; gap:10px; flex-wrap:wrap;
+    padding:34px 0 6px;
+  }
+  .chip{
+    padding:9px 20px; border:1px solid var(--line); border-radius:100px;
+    font-size:14px; color:var(--ink-soft); transition:all .2s ease;
+    background:#fff;
+  }
+  .chip.active, .chip:hover{ background:var(--forest-dark); color:var(--ivory); border-color:var(--forest-dark); }
+
+  /* ---------- Produk ---------- */
+  .produk-section{ padding:40px 0 90px; }
+  .section-head{ display:flex; align-items:end; justify-content:space-between; margin-bottom:30px; }
+  .section-head h2{ font-size:34px; }
+  .grid-produk{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:26px;
+  }
+  .kartu{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; display:flex; flex-direction:column;
+    transition:box-shadow .25s ease, transform .25s ease;
+  }
+  .kartu:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(43,40,30,.08); }
+  .kartu-art{
+    aspect-ratio:1/1; background:var(--paper);
+    display:flex; align-items:center; justify-content:center; padding:26px;
+    position:relative;
+  }
+  .kartu-art svg{ width:78%; height:78%; }
+  .badge-kategori{
+    position:absolute; top:14px; left:14px; background:#fff;
+    font-size:11px; padding:5px 12px; border-radius:100px; color:var(--rose-dark);
+    letter-spacing:.03em;
+  }
+  .kartu-info{ padding:20px 20px 22px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .kartu-info h3{ font-size:22px; font-weight:600; }
+  .kartu-info p{ font-size:14px; color:var(--ink-soft); flex:1; }
+  .kartu-bawah{ display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+  .harga{ font-size:19px; font-weight:500; color:var(--forest-dark); font-family:'Cormorant Garamond', serif; }
+  .aksi-kartu{ display:flex; gap:8px; }
+  .icon-btn{
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; transition:all .2s ease;
+  }
+  .icon-btn:hover{ background:var(--forest-dark); border-color:var(--forest-dark); color:#fff; }
+  .icon-btn svg{ width:18px; height:18px; }
+
+  /* ---------- Kenapa kami ---------- */
+  .kenapa{ background:var(--forest-dark); color:var(--ivory); padding:70px 0; }
+  .kenapa-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
+  .kenapa-item{ display:flex; flex-direction:column; gap:12px; }
+  .kenapa-item svg{ width:30px; height:30px; }
+  .kenapa-item h3{ color:var(--ivory); font-size:22px; }
+  .kenapa-item p{ font-size:14px; color:#C9C4B6; }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:56px 0 30px; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:36px; }
+  footer .display{ font-size:24px; margin-bottom:10px; }
+  footer p{ font-size:14px; color:var(--ink-soft); max-width:320px; }
+  footer h4{ font-size:14px; letter-spacing:.04em; text-transform:uppercase; margin-bottom:14px; color:var(--forest-dark); }
+  footer ul{ list-style:none; display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--ink-soft); }
+  .footer-bawah{ border-top:1px solid var(--line); padding-top:20px; font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; }
+
+  /* ---------- Cart Drawer ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(27,44,36,.45);
+    opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:60;
+  }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:400px; max-width:90vw;
+    background:var(--ivory); z-index:70; transform:translateX(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    display:flex; flex-direction:column; box-shadow:-8px 0 30px rgba(0,0,0,.12);
+  }
+  .drawer.show{ transform:translateX(0); }
+  .drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:24px; border-bottom:1px solid var(--line); }
+  .drawer-head h3{ font-size:24px; }
+  .drawer-body{ flex:1; overflow-y:auto; padding:10px 24px; }
+  .item-cart{ display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--line); }
+  .item-cart .mini-art{ width:64px; height:64px; background:var(--paper); border-radius:10px; padding:10px; flex-shrink:0; }
+  .item-cart .mini-art svg{ width:100%; height:100%; }
+  .item-info{ flex:1; }
+  .item-info h4{ font-size:16px; font-weight:500; margin-bottom:4px; }
+  .item-info .harga{ font-size:15px; }
+  .qty-row{ display:flex; align-items:center; gap:10px; margin-top:8px; }
+  .qty-btn{ width:26px; height:26px; border:1px solid var(--line); border-radius:6px; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .qty-btn:hover{ background:var(--forest-dark); color:#fff; border-color:var(--forest-dark); }
+  .hapus-item{ font-size:12px; color:var(--rose-dark); text-decoration:underline; margin-left:auto; align-self:flex-start; }
+  .drawer-kosong{ padding:60px 20px; text-align:center; color:var(--ink-soft); font-size:14px; }
+  .drawer-footer{ padding:22px 24px 26px; border-top:1px solid var(--line); }
+  .total-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .total-row span:first-child{ font-size:14px; color:var(--ink-soft); }
+  .total-row .harga{ font-size:24px; }
+  .btn-checkout{
+    width:100%; background:var(--rose-dark); color:#fff; padding:16px; border-radius:100px;
+    font-size:15px; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:background .2s ease;
+  }
+  .btn-checkout:hover{ background:var(--forest-dark); }
+  .btn-checkout:disabled{ opacity:.45; cursor:not-allowed; }
+  .catatan-checkout{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:10px; }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--forest-dark); color:var(--ivory); padding:14px 24px; border-radius:100px;
+    font-size:14px; opacity:0; pointer-events:none; transition:all .3s ease; z-index:80;
+    display:flex; align-items:center; gap:10px;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero h1{ font-size:38px; }
+    .kenapa-grid{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr; }
+    .nav-links{ display:none; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="4" stroke="#2F4A3E" stroke-width="1.4"/>
+        <path d="M15 11C15 8 13 6 10.5 6C10.5 9 12 11 15 11Z" stroke="#A9596A" stroke-width="1.4"/>
+        <path d="M15 11C15 8 17 6 19.5 6C19.5 9 18 11 15 11Z" stroke="#A9596A" stroke-width="1.4"/>
+        <path d="M11 15C8 15 6 17 6 19.5C9 19.5 11 18 11 15Z" stroke="#A9596A" stroke-width="1.4"/>
+        <path d="M19 15C22 15 24 17 24 19.5C21 19.5 19 18 19 15Z" stroke="#A9596A" stroke-width="1.4"/>
+      </svg>
+      <span class="display">Kelopak</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#koleksi">Koleksi</a></li>
+      <li><a href="#kenapa">Kenapa Kelopak</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+    <button class="cart-btn" id="btn-buka-cart" aria-label="Buka keranjang">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+      Keranjang
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <p class="eyebrow">Toko bunga &mdash; dirangkai tangan</p>
+      <h1>Kelopak yang <em>bercerita</em>,<br>dikirim tepat waktu.</h1>
+      <p>Setiap buket dirangkai satu per satu di studio kami sebelum berangkat ke penerima. Pesan sekarang, checkout langsung lewat Shopee.</p>
+      <a href="#koleksi" class="btn-primary">
+        Lihat koleksi
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 420 380" fill="none">
+        <path d="M210 340C210 340 140 300 140 220C140 160 190 120 210 90C230 120 280 160 280 220C280 300 210 340 210 340Z" stroke="#2F4A3E" stroke-width="1.3"/>
+        <path d="M210 340V150" stroke="#2F4A3E" stroke-width="1.3"/>
+        <circle cx="210" cy="90" r="26" stroke="#A9596A" stroke-width="1.4"/>
+        <path d="M210 64C210 64 195 40 175 42C177 62 194 68 210 64Z" stroke="#A9596A" stroke-width="1.3"/>
+        <path d="M210 64C210 64 225 40 245 42C243 62 226 68 210 64Z" stroke="#A9596A" stroke-width="1.3"/>
+        <path d="M184 90C184 90 158 82 152 60C174 58 190 74 184 90Z" stroke="#C9A24B" stroke-width="1.3"/>
+        <path d="M236 90C236 90 262 82 268 60C246 58 230 74 236 90Z" stroke="#C9A24B" stroke-width="1.3"/>
+        <circle cx="150" cy="180" r="16" stroke="#A9596A" stroke-width="1.3"/>
+        <circle cx="278" cy="200" r="20" stroke="#2F4A3E" stroke-width="1.3"/>
+        <circle cx="120" cy="250" r="12" stroke="#C9A24B" stroke-width="1.3"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<main class="container" id="koleksi">
+  <div class="kategori-bar" id="kategori-bar">
+    <button class="chip active" data-kategori="semua">Semua</button>
+    <button class="chip" data-kategori="buket">Buket harian</button>
+    <button class="chip" data-kategori="wisuda">Wisuda</button>
+    <button class="chip" data-kategori="pernikahan">Pernikahan</button>
+    <button class="chip" data-kategori="papan">Bunga papan</button>
+    <button class="chip" data-kategori="tanaman">Tanaman hias</button>
+  </div>
+
+  <section class="produk-section">
+    <div class="section-head">
+      <h2>Koleksi kami</h2>
+      <p class="eyebrow" id="jumlah-produk"></p>
+    </div>
+    <div class="grid-produk" id="grid-produk"></div>
+  </section>
+</main>
+
+<section class="kenapa" id="kenapa">
+  <div class="container kenapa-grid">
+    <div class="kenapa-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E8B4BB" stroke-width="1.5"><path d="M12 21C12 21 4 14.5 4 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.5-8 12-8 12"/></svg>
+      <h3>Dirangkai segar</h3>
+      <p>Bunga dipotong dan dirangkai di hari yang sama dengan pengiriman, bukan dari stok gudang.</p>
+    </div>
+    <div class="kenapa-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E8B4BB" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      <h3>Kirim tepat waktu</h3>
+      <p>Pilih tanggal dan jam pengiriman, kami pastikan sampai sebelum momen pentingmu.</p>
+    </div>
+    <div class="kenapa-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E8B4BB" stroke-width="1.5"><path d="M3 6h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+      <h3>Checkout via Shopee</h3>
+      <p>Pembayaran aman lewat Shopee, lengkap dengan proteksi pembeli dan jejak pengiriman.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="kontak">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="display">Kelopak</p>
+        <p>Studio bunga kecil yang percaya bahwa kelopak yang tepat bisa menyampaikan hal yang tidak sanggup dikatakan kata-kata.</p>
+      </div>
+      <div>
+        <h4>Toko</h4>
+        <ul>
+          <li>Koleksi</li>
+          <li>Kenapa Kelopak</li>
+          <li>Kebijakan pengiriman</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontak</h4>
+        <ul>
+          <li>Toko Shopee: kelopak.florist</li>
+          <li>WhatsApp: 0812-0000-0000</li>
+          <li>Jam layanan: 08.00 &ndash; 20.00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bawah">
+      <span>&copy; 2026 Kelopak. Dibuat untuk tugas mata kuliah e-commerce.</span>
+      <span>Dibuat dengan &hearts; di studio bunga digital.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Keranjang belanja">
+  <div class="drawer-head">
+    <h3>Keranjang</h3>
+    <button class="icon-btn" id="btn-tutup-cart" aria-label="Tutup keranjang">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-footer">
+    <div class="total-row">
+      <span>Total belanja</span>
+      <span class="harga" id="total-harga">Rp 0</span>
+    </div>
+    <button class="btn-checkout" id="btn-checkout" disabled>
+      Checkout ke Shopee
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+    <p class="catatan-checkout">Kamu akan diarahkan ke halaman toko kami di Shopee untuk menyelesaikan pembayaran.</p>
+  </div>
+</aside>
+
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toast-text">Ditambahkan ke keranjang</span>
+</div>
+
+<script>
+/* ======================================================
+   GANTI LINK SHOPEE DI BAWAH INI dengan link toko/produk
+   Shopee kamu yang sebenarnya sebelum dipublikasikan.
+   ====================================================== */
+const SHOPEE_TOKO_URL = "https://shopee.co.id/kelopak.florist";
+
+const produkList = [
+  {
+    id: "p1",
+    nama: "Mawar Merah \u201cCinta Abadi\u201d",
+    kategori: "buket",
+    labelKategori: "Buket harian",
+    harga: 185000,
+    deskripsi: "12 tangkai mawar merah premium dengan pita satin dan pembungkus kraft.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=mawar-cinta-abadi",
+    art: `<circle cx="50" cy="50" r="14" stroke="#A9596A" stroke-width="1.6"/>
+      <path d="M50 64V96" stroke="#2F4A3E" stroke-width="1.6"/>
+      <path d="M50 78C50 78 34 74 30 60C46 58 54 68 50 78Z" stroke="#2F4A3E" stroke-width="1.4"/>
+      <path d="M50 82C50 82 66 78 70 64C54 62 46 72 50 82Z" stroke="#2F4A3E" stroke-width="1.4"/>
+      <circle cx="30" cy="40" r="9" stroke="#A9596A" stroke-width="1.4"/>
+      <circle cx="72" cy="36" r="7" stroke="#C9A24B" stroke-width="1.4"/>`
+  },
+  {
+    id: "p2",
+    nama: "Buket Pastel \u201cSenja Musim Semi\u201d",
+    kategori: "buket",
+    labelKategori: "Buket harian",
+    harga: 210000,
+    deskripsi: "Campuran ranunculus, baby breath, dan mawar pastel untuk kado harian.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=senja-musim-semi",
+    art: `<circle cx="40" cy="42" r="11" stroke="#E8B4BB" stroke-width="1.5"/>
+      <circle cx="62" cy="38" r="9" stroke="#C9A24B" stroke-width="1.5"/>
+      <circle cx="55" cy="58" r="8" stroke="#A9596A" stroke-width="1.5"/>
+      <path d="M50 66V96" stroke="#2F4A3E" stroke-width="1.6"/>
+      <path d="M50 80C50 80 36 76 32 64" stroke="#2F4A3E" stroke-width="1.3"/>`
+  },
+  {
+    id: "p3",
+    nama: "Bunga Papan \u201cSukses Selalu\u201d",
+    kategori: "papan",
+    labelKategori: "Bunga papan",
+    harga: 750000,
+    deskripsi: "Papan ucapan setinggi 180cm untuk pembukaan toko, pelantikan, atau acara resmi.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=papan-sukses-selalu",
+    art: `<rect x="30" y="20" width="40" height="54" rx="2" stroke="#2F4A3E" stroke-width="1.4"/>
+      <path d="M30 74L20 96M70 74L80 96" stroke="#2F4A3E" stroke-width="1.4"/>
+      <circle cx="42" cy="34" r="7" stroke="#A9596A" stroke-width="1.3"/>
+      <circle cx="58" cy="34" r="7" stroke="#C9A24B" stroke-width="1.3"/>
+      <circle cx="50" cy="48" r="7" stroke="#A9596A" stroke-width="1.3"/>`
+  },
+  {
+    id: "p4",
+    nama: "Buket Wisuda \u201cKelulusan Ceria\u201d",
+    kategori: "wisuda",
+    labelKategori: "Wisuda",
+    harga: 165000,
+    deskripsi: "Bunga matahari mini dan aster warna-warni, dilengkapi kartu ucapan.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=wisuda-kelulusan-ceria",
+    art: `<circle cx="45" cy="40" r="12" stroke="#C9A24B" stroke-width="1.5"/>
+      <circle cx="45" cy="40" r="4" stroke="#2F4A3E" stroke-width="1.3"/>
+      <circle cx="66" cy="46" r="8" stroke="#A9596A" stroke-width="1.4"/>
+      <path d="M50 60V96" stroke="#2F4A3E" stroke-width="1.6"/>
+      <path d="M50 74C50 74 62 70 65 58" stroke="#2F4A3E" stroke-width="1.3"/>`
+  },
+  {
+    id: "p5",
+    nama: "Monstera Mini",
+    kategori: "tanaman",
+    labelKategori: "Tanaman hias",
+    harga: 95000,
+    deskripsi: "Tanaman hias dalam pot keramik, cocok untuk meja kerja atau kado rumah baru.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=monstera-mini",
+    art: `<path d="M30 70C30 70 26 46 46 30C50 46 44 60 30 70Z" stroke="#2F4A3E" stroke-width="1.4"/>
+      <path d="M50 74C50 74 46 46 70 34C72 52 64 66 50 74Z" stroke="#2F4A3E" stroke-width="1.4"/>
+      <path d="M32 78h36l-4 18H36l-4-18Z" stroke="#A9596A" stroke-width="1.4"/>`
+  },
+  {
+    id: "p6",
+    nama: "Buket Pernikahan \u201cJanji Suci\u201d",
+    kategori: "pernikahan",
+    labelKategori: "Pernikahan",
+    harga: 320000,
+    deskripsi: "Buket putih ivory dengan eucalyptus dan pita sutra untuk hari pernikahan.",
+    shopeeUrl: "https://shopee.co.id/kelopak.florist?produk=janji-suci",
+    art: `<circle cx="42" cy="40" r="10" stroke="#DDD5C4" stroke-width="1.5"/>
+      <circle cx="60" cy="36" r="8" stroke="#E8B4BB" stroke-width="1.5"/>
+      <circle cx="55" cy="54" r="9" stroke="#DDD5C4" stroke-width="1.5"/>
+      <path d="M50 62V96" stroke="#2F4A3E" stroke-width="1.6"/>
+      <path d="M42 76l16 8M58 76l-16 8" stroke="#C9A24B" stroke-width="1.2"/>`
+  }
+];
+
+let keranjang = {};
+
+function formatRupiah(angka){
+  return "Rp " + angka.toLocaleString("id-ID");
+}
+
+function svgWrapper(inner){
+  return `<svg viewBox="0 0 100 100" fill="none">${inner}</svg>`;
+}
+
+function renderProduk(filter){
+  const grid = document.getElementById("grid-produk");
+  const daftar = filter === "semua" ? produkList : produkList.filter(p => p.kategori === filter);
+  document.getElementById("jumlah-produk").textContent = daftar.length + " produk";
+
+  grid.innerHTML = daftar.map(p => `
+    <div class="kartu">
+      <div class="kartu-art">
+        <span class="badge-kategori">${p.labelKategori}</span>
+        ${svgWrapper(p.art)}
+      </div>
+      <div class="kartu-info">
+        <h3>${p.nama}</h3>
+        <p>${p.deskripsi}</p>
+        <div class="kartu-bawah">
+          <span class="harga">${formatRupiah(p.harga)}</span>
+          <div class="aksi-kartu">
+            <button class="icon-btn" title="Tambah ke keranjang" aria-label="Tambah ke keranjang" onclick="tambahKeKeranjang('${p.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function tambahKeKeranjang(id){
+  keranjang[id] = (keranjang[id] || 0) + 1;
+  perbaruiCart();
+  tampilkanToast("Ditambahkan ke keranjang");
+}
+
+function ubahJumlah(id, delta){
+  if(!keranjang[id]) return;
+  keranjang[id] += delta;
+  if(keranjang[id] <= 0) delete keranjang[id];
+  perbaruiCart();
+}
+
+function hapusItem(id){
+  delete keranjang[id];
+  perbaruiCart();
+}
+
+function perbaruiCart(){
+  const idList = Object.keys(keranjang);
+  const totalQty = idList.reduce((sum, id) => sum + keranjang[id], 0);
+  document.getElementById("cart-count").textContent = totalQty;
+
+  const body = document.getElementById("drawer-body");
+  const btnCheckout = document.getElementById("btn-checkout");
+
+  if(idList.length === 0){
+    body.innerHTML = `<div class="drawer-kosong">Keranjang masih kosong.<br>Yuk pilih buket favoritmu.</div>`;
+    btnCheckout.disabled = true;
+  }else{
+    body.innerHTML = idList.map(id => {
+      const p = produkList.find(x => x.id === id);
+      const qty = keranjang[id];
+      return `
+        <div class="item-cart">
+          <div class="mini-art">${svgWrapper(p.art)}</div>
+          <div class="item-info">
+            <h4>${p.nama}</h4>
+            <span class="harga">${formatRupiah(p.harga)}</span>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="ubahJumlah('${id}', -1)" aria-label="Kurangi jumlah">-</button>
+              <span>${qty}</span>
+              <button class="qty-btn" onclick="ubahJumlah('${id}', 1)" aria-label="Tambah jumlah">+</button>
+              <button class="hapus-item" onclick="hapusItem('${id}')">Hapus</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+    btnCheckout.disabled = false;
+  }
+
+  const total = idList.reduce((sum, id) => {
+    const p = produkList.find(x => x.id === id);
+    return sum + p.harga * keranjang[id];
+  }, 0);
+  document.getElementById("total-harga").textContent = formatRupiah(total);
+}
+
+function tampilkanToast(teks){
+  const toast = document.getElementById("toast");
+  document.getElementById("toast-text").textContent = teks;
+  toast.classList.add("show");
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+/* Filter kategori */
+document.getElementById("kategori-bar").addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  renderProduk(chip.dataset.kategori);
+});
+
+/* Buka / tutup drawer */
+const overlay = document.getElementById("overlay");
+const drawer = document.getElementById("drawer");
+function bukaCart(){ overlay.classList.add("show"); drawer.classList.add("show"); }
+function tutupCart(){ overlay.classList.remove("show"); drawer.classList.remove("show"); }
+document.getElementById("btn-buka-cart").addEventListener("click", bukaCart);
+document.getElementById("btn-tutup-cart").addEventListener("click", tutupCart);
+overlay.addEventListener("click", tutupCart);
+
+/* Checkout -> arahkan ke Shopee */
+document.getElementById("btn-checkout").addEventListener("click", () => {
+  if(Object.keys(keranjang).length === 0) return;
+  tampilkanToast("Mengarahkan ke Shopee...");
+  setTimeout(() => {
+    window.open(SHOPEE_TOKO_URL, "_blank");
+  }, 700);
+});
+
+renderProduk("semua");
+</script>
+</body>
+</html>
